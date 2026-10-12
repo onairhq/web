@@ -1,5 +1,7 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## [view demo click here](https://onairhq.github.io/web/)
+
 ## Getting Started
 
 First, run the development server:
