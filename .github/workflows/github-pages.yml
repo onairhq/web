@@ -27,22 +27,6 @@ jobs:
         with:
           ref: ${{ inputs.tag || github.ref }}
 
-      - name: Read version from Git tag
-        id: version
-        shell: bash
-        env:
-          GIT_REF: ${{ inputs.tag || github.ref_name }}
-        run: |
-          TAG="${GIT_REF#refs/tags/}"
-
-          if ! [[ "$TAG" =~ ^v([0-9]+\.[0-9]+\.[0-9]+)(-rc[0-9]+)?$ ]]; then
-            echo "Invalid release tag: $TAG"
-            echo "Expected format: vX.Y.Z or vX.Y.Z-rcN"
-            exit 1
-          fi
-
-          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
-
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
@@ -57,11 +41,6 @@ jobs:
         env:
           EXPORT_SSG: "true"
           STREAM_URL: "https://stream.radioparadise.com/rock-32"
-
-      - name: Add generated HTML to export
-        run: |
-          cp .next/server/app/index.html out/index.html
-          cp .next/server/app/_not-found.html out/404.html
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
