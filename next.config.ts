@@ -1,16 +1,9 @@
 import type { NextConfig } from "next";
 
 const uid = new Date();
+const isSSG = process.env.EXPORT_SSG === "true";
 
-const getOsExport = (): {
-  output: "standalone" | "export" | undefined;
-  basePath: string | undefined;
-} => {
-  return {
-    output: process.env.EXPORT_SSG ? "export" : "standalone",
-    basePath: process.env.EXPORT_SSG ? "/web" : undefined,
-  };
-};
+console.log(isSSG, "isssg");
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
@@ -28,17 +21,16 @@ const nextConfig: NextConfig = {
   },
   generateBuildId: () => `build-${uid.getTime()}`,
   deploymentId: `deploy-${uid.getTime()}`,
-  output: getOsExport().output,
-  basePath: process.env.EXPORT_SSG ? "/web" : undefined,
-  cacheComponents: true,
-  partialPrefetching: true,
-  reactCompiler: true,
+  output: isSSG ? "export" : "standalone",
+  basePath: isSSG ? "/web" : undefined,
+  cacheComponents: !isSSG,
+  partialPrefetching: !isSSG,
   turbopack: {
+    resolveAlias: isSSG
+      ? { "@/lib/icecast-sdk.lib": "./lib/icecast-sdk.static.lib.ts" }
+      : {},
     rules: {
-      "*.css": {
-        loaders: ["@tailwindcss/turbopack"],
-        as: "*.css",
-      },
+      "*.css": { loaders: ["@tailwindcss/turbopack"], as: "*.css" },
     },
   },
 };

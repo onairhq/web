@@ -7,11 +7,11 @@ import { SkeletonComponent } from "@/components/icecast-player/skeleton";
 import { useIcecastHook } from "@/components/icecast-player/icecast-player.hook";
 import { PauseIcon, PlayIcon } from "@/components/icecast-player/icon";
 
-export const IcecastPlayerComponent: FC<{ stremUrl: string }> = ({
-  stremUrl,
+export const IcecastPlayerComponent: FC<{ streamUrl: string }> = ({
+  streamUrl,
 }) => {
   const { metadata, isLoading, isPlaying, error, toggle } =
-    useIcecastHook(stremUrl);
+    useIcecastHook(streamUrl);
 
   if (isLoading) {
     return <SkeletonComponent />;

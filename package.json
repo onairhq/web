@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "run": "npx serve@latest out",
     "start": "next start",
     "lint": "biome check .",
     "format": "biome format --write"

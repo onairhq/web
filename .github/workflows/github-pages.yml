@@ -1,9 +1,6 @@
 name: Deploy to GitHub Pages
 
 on:
-  push:
-    tags:
-      - "v*"
   workflow_dispatch:
     inputs:
       tag:
@@ -60,6 +57,11 @@ jobs:
         env:
           EXPORT_SSG: "true"
           STREAM_URL: "https://stream.radioparadise.com/rock-32"
+
+      - name: Add generated HTML to export
+        run: |
+          cp .next/server/app/index.html out/index.html
+          cp .next/server/app/_not-found.html out/404.html
 
       - name: Setup Pages
         uses: actions/configure-pages@v5

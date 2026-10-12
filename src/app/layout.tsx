@@ -1,25 +1,31 @@
 import "@/@assets/globals.css";
 
 import { fontGeistMono, fontGeistSans } from "@/lib/font.lib";
-import { getIcecastUrlAndMount } from "@/lib/env.lib";
-import { getIcecastStatus } from "@/lib/icecast-sdk.lib";
+// import { getIcecastUrlAndMount } from "@/lib/env.lib";
+// import { getIcecastStatus } from "@/lib/icecast-sdk.lib";
 import { Providers } from "@/providers";
 import type { Metadata } from "next";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const { url, mount } = getIcecastUrlAndMount();
-  const { stream, radio } = await getIcecastStatus(url, mount);
+  //   if (typeof process.env.EXPORT_SSG === "undefined") {
+  //     const { url, mount } = getIcecastUrlAndMount();
+  //     const { stream, radio } = await getIcecastStatus(url, mount);
+  //
+  //     return {
+  //       title: `${stream.title ?? "Live"} | ${radio.name ?? "Radio"}`,
+  //       description: radio.description ?? "",
+  //       applicationName: radio.name ?? "Radio",
+  //       openGraph: {
+  //         type: "website",
+  //         title: stream.title ?? radio.name ?? "Radio",
+  //         description: radio.description ?? "",
+  //         url: stream.url ?? url,
+  //       },
+  //     };
+  //   }
 
   return {
-    title: `${stream.title ?? "Live"} | ${radio.name ?? "Radio"}`,
-    description: radio.description ?? "",
-    applicationName: radio.name ?? "Radio",
-    openGraph: {
-      type: "website",
-      title: stream.title ?? radio.name ?? "Radio",
-      description: radio.description ?? "",
-      url: stream.url ?? url,
-    },
+    title: "Radio",
   };
 }
 
