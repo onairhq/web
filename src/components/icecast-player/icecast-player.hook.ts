@@ -15,11 +15,24 @@ const INITIAL_METADATA: IcyMetadata = {
 export const useIcecastHook = (streamUrl: string) => {
   const playerRef = useRef<IcecastPlayerInstance | null>(null);
 
+  const [volume, setVolume] = useState<number>(30);
   const [metadata, setMetadata] = useState<IcyMetadata>(INITIAL_METADATA);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isStarted, setIsStarted] = useState(false);
-  const [isMuted, setIsMuted] = useState(true);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isStarted, setIsStarted] = useState<boolean>(false);
+  const [isMuted, setIsMuted] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const originalTitle = document.title;
+
+    if (metadata.StreamTitle !== "Unknown") {
+      document.title = metadata.StreamTitle || "Radio";
+    }
+
+    return () => {
+      document.title = originalTitle;
+    };
+  }, [metadata.StreamTitle]);
 
   useEffect(() => {
     let disposed = false;
@@ -59,6 +72,7 @@ export const useIcecastHook = (streamUrl: string) => {
     });
 
     playerRef.current = player;
+    player.audioElement.volume = volume / 100;
     player.audioElement.muted = true;
 
     player.play().catch((e: unknown) => {
@@ -80,6 +94,26 @@ export const useIcecastHook = (streamUrl: string) => {
       player.audioElement.muted = true;
     };
   }, [streamUrl]);
+
+  const changeVolume = useCallback((newVolume: number) => {
+    const player = playerRef.current;
+    if (!player) return;
+
+    const normalizedVolume = Math.max(0, Math.min(100, newVolume));
+
+    player.audioElement.volume = normalizedVolume / 100;
+    setVolume(normalizedVolume);
+
+    if (normalizedVolume > 0 && player.audioElement.muted) {
+      player.audioElement.muted = false;
+      setIsMuted(false);
+    }
+
+    if (normalizedVolume === 0) {
+      player.audioElement.muted = true;
+      setIsMuted(true);
+    }
+  }, []);
 
   const play = useCallback(async () => {
     const player = playerRef.current;
@@ -122,6 +156,8 @@ export const useIcecastHook = (streamUrl: string) => {
   }, [isPlaying, play, pause]);
 
   return {
+    volume,
+    changeVolume,
     metadata,
     isLoading,
     isStarted,
