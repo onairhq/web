@@ -1,1 +1,6 @@
-export { FaPause as PauseIcon, FaPlay as PlayIcon } from "react-icons/fa";
+export {
+  FaPause as PauseIcon,
+  FaPlay as PlayIcon,
+  FaVolumeDown as VolumeDownIcon,
+  FaVolumeUp as VolumeUpIcon,
+} from "react-icons/fa";
